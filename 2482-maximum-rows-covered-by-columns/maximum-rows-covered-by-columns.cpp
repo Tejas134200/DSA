@@ -17,8 +17,10 @@ public:
         if(num==0){
             int k = check(mat);
             ans=max(ans,k);
+            return;
         }
         if(i==mat[0].size()) return;
+        if(mat[0].size() - i < num) return;
         vector<vector<int>> temp = mat;
         for(int j =0;j<mat.size();j++){
             mat[j][i]=0;
