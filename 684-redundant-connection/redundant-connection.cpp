@@ -1,41 +1,37 @@
 class Solution {
-private:
-    // Performs DFS and returns true if there's a path between src and target.
-    bool isConnected(int src, int target, vector<bool>& visited,
-                     vector<int> adjList[]) {
-        visited[src] = true;
+public:
+    vector<int> parent, rank;
 
-        if (src == target) {
-            return true;
-        }
-
-        int isFound = false;
-        for (int adj : adjList[src]) {
-            if (!visited[adj]) {
-                isFound = isFound || isConnected(adj, target, visited, adjList);
-            }
-        }
-
-        return isFound;
+    int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);
+        return parent[x];
     }
 
-public:
+    void unite(int a, int b) {
+        a = find(a);
+        b = find(b);
+        if (a == b) return;
+        if (rank[a] < rank[b]) swap(a, b);
+        parent[b] = a;
+        if (rank[a] == rank[b]) rank[a]++;
+    }
+
     vector<int> findRedundantConnection(vector<vector<int>>& edges) {
-        int N = edges.size();
+        int n = edges.size();
+        parent.resize(n + 1);
+        rank.resize(n + 1, 0);
 
-        vector<int> adjList[N];
-        for (auto edge : edges) {
-            vector<bool> visited(N, false);
+        for (int i = 1; i <= n; i++)
+            parent[i] = i;
 
-            // If DFS returns true, we will return the edge.
-            if (isConnected(edge[0] - 1, edge[1] - 1, visited, adjList)) {
-                return edge;
-            }
-
-            adjList[edge[0] - 1].push_back(edge[1] - 1);
-            adjList[edge[1] - 1].push_back(edge[0] - 1);
+        vector<int> ans;
+        for (auto &e : edges) {
+            if (find(e[0]) == find(e[1]))
+                ans = e;
+            else
+                unite(e[0], e[1]);
         }
-
-        return {};
+        return ans;
     }
 };
