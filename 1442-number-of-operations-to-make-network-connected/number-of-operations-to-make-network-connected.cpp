@@ -1,6 +1,6 @@
 class Solution {
 public:
-    vector<int> par;
+    vector<int> par,rank;
     int find(int x){
         if(par[x]!=x) par[x] = find(par[x]);
         return par[x];
@@ -10,11 +10,19 @@ public:
         int py = find(y);
 
         if(px==py) return;
-        par[px]=py;
+        if(rank[px]<rank[py]){
+            par[px]=py;
+        }else if(rank[px]>rank[py]){
+            par[py]=px;
+        }else{
+            par[px]=py;
+            rank[py]++;
+        }
         return;
     }
     int makeConnected(int n, vector<vector<int>>& connections) {
         par.resize(n);
+        rank.resize(n,0);
         for(int i =0;i<n;i++) par[i]=i;
         int c =0;
         
