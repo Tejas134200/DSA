@@ -13,12 +13,7 @@ public:
 
         if(aa == bb) return;
 
-        if(r[aa] < r[bb]) par[aa] = bb;
-        else if(r[bb] < r[aa]) par[bb] = aa;
-        else{
-            par[bb] = aa;
-            r[aa]++;
-        }
+        par[bb]=aa;
     }
 
     vector<int> minimumCost(int n, vector<vector<int>>& edges, vector<vector<int>>& query) {
