@@ -1,28 +1,61 @@
 class NumArray {
 public:
-    vector<int> pre;
-    vector<int> nn;
     int n;
+    vector<int> a , seg;
     NumArray(vector<int>& nums) {
-        nn=nums;
-         n = nums.size();
-        pre.resize(n,0);
-        pre[0]=nums[0];
-        for(int i =1;i<n;i++){
-            pre[i]=pre[i-1]+nums[i];
+        n = nums.size();
+        a=nums;
+        seg.resize(4*n);
+        build(0,0,n-1);
+    }
+
+    void build(int i , int low , int high){
+        if(low==high){
+            seg[i] = a[low];
+            return;
+        }
+        int mid = (high+low)/2;
+        build(2*i+1 , low , mid);
+        build(2*i+2 , mid+1 , high);
+
+        seg[i] = seg[2*i+1] + seg[2*i+2];
+        return;
+    }
+
+    int sum(int i , int low , int high , int l , int r){
+        if(l>high||r<low) return 0;
+        if(l<=low&&high<=r) return seg[i];
+        int mid = (high+low)/2;
+        int le = sum(i*2+1 , low , mid , l , r );
+        int ri = sum(i*2+2 , mid+1 , high , l , r);
+
+        return le+ri;
+    }
+
+    void upd(int i , int low , int high , int ind , int val){
+        if(low==high){
+            seg[i]+=val;
+            return;
+        }
+        int mid = (low+high)/2;
+        if(low<=ind&&ind<=mid){
+            upd(2*i+1 , low , mid , ind , val);
+        }else{
+            upd(2*i+2 , mid+1 , high , ind , val);
         }
 
+        seg[i] = seg[2*i+1]+seg[2*i+2];
+        return;
     }
-    
     void update(int index, int val) {
-        int k = val-nn[index];
-        nn[index]= val;
-        for(int i =index;i<n;i++) pre[i]+=k;
+        int vv = val;
+        val = val-a[index];
+        a[index] = vv;
+        upd(0 , 0 , n-1 , index , val);
     }
     
     int sumRange(int left, int right) {
-        if(left==0) return pre[right];
-        return pre[right]-pre[left-1];
+        return sum(0 , 0 , n-1 , left , right);
     }
 };
 
