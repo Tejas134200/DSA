@@ -12,21 +12,23 @@ public:
             }
         }
         long long sum=0;
-        for(int i:h) sum+=i;
+        for(long long i:h) sum+=i;
         long long x =0;
-        for(int i = 0; i < m - 1; i++){
-    x += h[i];
-    sum -= h[i];
-    if(x == sum) return true;
-}
+        for(long long i:h){
+            x+=i;
+            sum-=i;
+            if(x==sum) return true;
+        }
         sum =0;
-        for(int i:v) sum+=i;
+        for(long long i:v) sum+=i;
         x =0;
-        for(int i = 0; i < n - 1; i++){
-    x += v[i];
-    sum -= v[i];
-    if(x == sum) return true;
-}
+        for(long long i:v){
+            x+=i;
+            sum-=i;
+            if(sum==x){
+                return true;
+            }
+        }
         return false;
     }
 };
