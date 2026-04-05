@@ -1,34 +1,29 @@
 class Solution {
 public:
-    int minCost(vector<vector<int>>& grid) {
-        int m = grid.size();
-        int n = grid[0].size();
-        vector<vector<unordered_set<int>>> vec(m , vector<unordered_set<int>>(n));
-
-        vec[0][0].insert(grid[0][0]);
-        for(int i =1;i<n;i++){
-            for(auto &ii:vec[0][i-1]){
-                vec[0][i].insert(ii^grid[0][i]);
-            }
-        }
-        for(int i =1;i<m;i++){
-            for(auto &ii:vec[i-1][0]){
-                vec[i][0].insert(ii^grid[i][0]);
-            }
-        }
-
-        for(int i =1;i<m;i++){
-            for(int j = 1;j<n;j++){
-                for(auto &ii:vec[i-1][j]) vec[i][j].insert(ii^grid[i][j]);
-                for(auto &ii:vec[i][j-1]) vec[i][j].insert(ii^grid[i][j]);
-            }
-        }
-        int mini = INT_MAX;
-        for(auto &ii:vec[m-1][n-1]) mini = min(mini , ii);
-        return mini;
+    int n,m;
+    int dfs(int i,int j,int xori,vector<vector<int>>&grid,vector<vector<vector<int>>>&dp){
         
+        if(i>=n || j>=m )return INT_MAX;
+        xori=xori^grid[i][j];
+        if(i==n-1 && j==m-1){
+            return xori;
+        }
+
+        if(dp[i][j][xori]!=-1)return dp[i][j][xori];
 
 
+        int right= dfs(i,j+1,xori,grid,dp);
+        int down= dfs(i+1,j,xori,grid,dp);
 
+        return dp[i][j][xori]= min(right,down);
+        
+    }
+    int minCost(vector<vector<int>>& grid) {
+         n=grid.size();
+         m=grid[0].size();
+        vector<vector<vector<int>>>dp(n,vector<vector<int>>(m,
+                                                    vector<int>(1024,-1)));
+
+        return dfs(0,0,0,grid,dp);
     }
 };
