@@ -8,6 +8,7 @@ public:
         vis[i][j]=1;
         bool aa=false;
         for(int it=0;it<4;it++){
+            if(aa) return true;
             int xx = i+x[it];
             int yy = j+y[it];
 
