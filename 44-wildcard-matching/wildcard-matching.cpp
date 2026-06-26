@@ -2,6 +2,8 @@ class Solution {
 public:
 vector<vector<int>> dp;
     bool find(int i , int j , string& s , string& p){
+                if(dp[i][j]!=-1) return dp[i][j];
+
         if(j==p.size()){
             return dp[i][j] =( i==s.size());
         }
@@ -12,7 +14,6 @@ vector<vector<int>> dp;
     }
     return dp[i][j] = true;
         }
-        if(dp[i][j]!=-1) return dp[i][j];
 
         bool match = s[i]==p[j]||p[j]=='?';
         if(p[j]=='*'){
