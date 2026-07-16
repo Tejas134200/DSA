@@ -3,37 +3,37 @@ public:
 
 int bfsLevel(int src, vector<vector<int>>& adj, int n){
 
-        vector<int> dist(n + 1, -1);
+    vector<int> vis(n + 1, 0);
 
-        queue<int> q;
+    queue<int> q;
+    q.push(src);
+    vis[src] = 1;
 
-        q.push(src);
+    int level = 0;
 
-        dist[src] = 1;
+    while(!q.empty()){
 
-        int mx = 1;
+        int sz = q.size();
 
-        while(!q.empty()){
+        level++;
+
+        while(sz--){
 
             int u = q.front();
             q.pop();
 
             for(int v : adj[u]){
 
-                if(dist[v] == -1){
-
-                    dist[v] = dist[u] + 1;
-
-                    mx = max(mx, dist[v]);
-
+                if(!vis[v]){
+                    vis[v] = 1;
                     q.push(v);
                 }
             }
         }
-
-        return mx;
     }
 
+    return level;
+}
     bool bipartite(int i , vector<vector<int>>& adj , vector<int>& colors){
         queue<int> q;
         q.push(i);
